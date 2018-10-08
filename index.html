@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<title>4K Television Ratings</title>
+
+	<style type="text/css">
+
+		.stars-outer{
+			position: relative;
+			display: inline-block;
+		}
+		.stars-inner {
+			position: absolute;
+			top: 0;
+			left: 0;
+			white-space: nowrap;
+			overflow: hidden;
+			width: 0;
+		}
+		.stars-outer::before {
+			content: "\f005 \f005 \f005 \f005 \f005";
+			font-family: 'Font Awesome 5 Free';
+			font-weight: 900;
+			color: #ccc;
+		}
+		.stars-inner::before {
+			content: "\f005 \f005 \f005 \f005 \f005";
+			font-family: 'Font Awesome 5 Free';
+			font-weight: 900;
+			color: #f8ce0b;
+		}
+
+	</style>
+
+</head>
+<body>
+	<div class="container mt-5">
+		<div class="form-group">
+			<select id="product-select" class="form-control custom-select">
+				<option value="0" disabled selected>Select Products</option>
+				<option value="sony">Sony 4K TV</option>
+				<option value="samsung">Samsung 4K TV</option>
+				<option value="vizio">vizio 4K TV</option>
+				<option value="panasonic">panasonic 4K TV</option>
+				<option value="phillips">phillips 4K TV</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<input type="number" id="rating-control" class="form-control" step="0.1" max="5" placeholder="1 - 5" disabled>
+		</div>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>4 Television</th>
+					<th>Rating</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="sony">
+					<td>Sony 4K TV</td>
+					<td>
+						<div class="stars-outer">
+							<div class="stars-inner"></div>
+						</div>
+						<span class="number-rating"></span>
+						<span class="number-rating"></span>
+					</td>
+				</tr>
+				<tr class="samsung">
+					<td>Samsung 4K TV</td>
+					<td>
+						<div class="stars-outer">
+							<div class="stars-inner"></div>
+						</div>
+						<span class="number-rating"></span>
+						<span class="number-rating"></span>
+					</td>
+				</tr>
+				<tr class="vizio">
+					<td>vizio 4K TV</td>
+					<td>
+						<div class="stars-outer">
+							<div class="stars-inner"></div>
+						</div>
+						<span class="number-rating"></span>
+						<span class="number-rating"></span>
+					</td>
+				</tr>
+				<tr class="panasonic">
+					<td>panasonic 4K TV</td>
+					<td>
+						<div class="stars-outer">
+							<div class="stars-inner"></div>
+						</div>
+						<span class="number-rating"></span>
+						<span class="number-rating"></span>
+					</td>
+				</tr>
+				<tr class="phillips">
+					<td>phillips 4K TV</td>
+					<td>
+						<div class="stars-outer">
+							<div class="stars-inner"></div>
+						</div>
+						<span class="number-rating"></span>
+						<span class="number-rating"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<script type="text/javascript">
+		// Initial Ratings
+		const ratings = {
+			sony: 4.7,
+			samsung: 3.4,
+			vizio: 2.3,
+			panasonic: 3.6,
+			phillips:4.1
+		}
+
+		//Total stars
+		const starsTotal = 5;
+
+		// run getratings when DOM loads
+		document.addEventListener('DOMContentLoaded', getRatings);
+
+		//form element
+		const productSelect = document.getElementById('product-select');
+		const ratingControl = document.getElementById('rating-control');
+
+		// init product
+		let product;
+
+		 //product select change 
+		 productSelect.addEventListener('change', (e) => {
+		 	product = e.target.value;
+		 	//enable rating control
+		 	ratingControl.disabled = false;
+		 	ratingControl.value = ratings[product];
+		 });
+
+		 //rating control change 
+		 ratingControl.addEventListener('keyup', (e) => {
+		 	
+		 	const rating = e.target.value;
+
+		 	//make sure 5 or under 
+		 	if (rating > 5) {
+		 		alert('please rate 1 - 5');
+		 		return;
+		 	}
+
+		 	//change rating
+
+		 	ratings[product] = rating;
+
+		 	event.preventDefault();
+    		if (event.keyCode === 13) {
+        		getRatings();
+    		}
+		 	
+		 });
+
+		//get ratings
+
+		function getRatings() {
+			for(let rating in ratings) {
+				//get percentage
+				const starPercentage = (ratings[rating]/starsTotal)*100;
+
+				//round to nearest 10
+				const starPercentageRounded = `${Math.round
+				(starPercentage/10)*10}%`;
+
+				// set width of star-inner to percentage
+				document.querySelector(`.${rating}
+				.stars-inner`).style.width = starPercentageRounded;
+
+				//add number rating
+				document.querySelector(`.${rating}
+				.number-rating`).innerHTML = ratings[rating];
+			}
+		}
+	</script>
+
+</body>
+</html>
